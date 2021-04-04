@@ -25,35 +25,33 @@
 
 /******************************************************************************
  *
- * @file     status_monitor.cc
+ * @file     ncurses_colors.h
  * @author   OrthogonalHawk
- * @date     02-Apr-2021
+ * @date     03-Apr-2021
  *
- * @brief    Example that shows how to create a 'status monitor' display that
- *            periodically updates based on new information.
+ * @brief    Helper methods to manage ncurses colors.
  *
  * @section  DESCRIPTION
  *
- * This 'status monitor' example shows how to create an interface that periodically
- *  updates based on new information.
+ * Defines helper methods for working with ncurses colors.
  *
  * @section  HISTORY
  *
- * 02-Apr-2021  OrthogonalHawk  File created.
+ * 03-Apr-2021  OrthogonalHawk  File created.
  *
  *****************************************************************************/
+
+#ifndef __NCURSES_COLORS_H__
+#define __NCURSES_COLORS_H__
 
 /******************************************************************************
  *                               INCLUDE_FILES
  *****************************************************************************/
 
-#include <chrono>
-#include <thread>
-
 #include <ncurses.h>
 
-#include "ncurses_window.h"
 
+namespace ncurses_cpp {
 
 /******************************************************************************
  *                                 CONSTANTS
@@ -63,57 +61,36 @@
  *                              ENUMS & TYPEDEFS
  *****************************************************************************/
 
+typedef enum {
+    NCURSES_CPP_TXT_COLOR_DEFAULT = 0,
+    NCURSES_CPP_TXT_COLOR_BLACK,
+    NCURSES_CPP_TXT_COLOR_RED,
+    NCURSES_CPP_TXT_COLOR_GREEN,
+    NCURSES_CPP_TXT_COLOR_YELLOW,
+    NCURSES_CPP_TXT_COLOR_BLUE,
+    NCURSES_CPP_TXT_COLOR_MAGENTA,
+    NCURSES_CPP_TXT_COLOR_CYAN,
+    NCURSES_CPP_TXT_COLOR_WHITE
+} ncurses_cpp_text_colors_e;
+
+
 /******************************************************************************
  *                                  MACROS
  *****************************************************************************/
 
 /******************************************************************************
- *                           FUNCTION IMPLEMENTATION
+ *                           FUNCTION DECLARATION
  *****************************************************************************/
+
+bool init_colors(int text_background_color);
+
+bool init_colors(void);
+
 
 /******************************************************************************
- *                           CLASS IMPLEMENTATION
+ *                            CLASS DECLARATION
  *****************************************************************************/
 
-int main(int argc, char *argv[])
-{
-    (void)argc;
-    (void)argv;
+}; /* end of the ncurses_cpp namespace */
 
-    initscr();                  /* Start curses mode         */
-    ncurses_cpp::init_colors(); /* Start the color functionality */
-    cbreak();                   /* Line buffering disabled, Pass on
-                                 * everything to me         */
-    keypad(stdscr, TRUE);       /* I need that nifty F1     */
-    noecho();
-    curs_set(0);
-
-    attron(COLOR_PAIR(ncurses_cpp::NCURSES_CPP_TXT_COLOR_MAGENTA));
-    printw("Press F1 to exit");
-    refresh();
-    attroff(COLOR_PAIR(ncurses_cpp::NCURSES_CPP_TXT_COLOR_MAGENTA));
-
-    auto my_window = ncurses_cpp::ncurses_window(true);
-    my_window.create_window(10, 20, 2, 2);
-    my_window.add_str_field(1, 1, "test_str", "%s", "hello");
-    my_window.add_int32_field(2, 4, "test_int", "%d", 100);
-    my_window.add_uint32_field(5, 8, "test_uint", "0x%08x", 0xFEEDBEEF);
-
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-
-    my_window.update_str_field("test_str", "world", ncurses_cpp::NCURSES_CPP_TXT_COLOR_GREEN);
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-
-    my_window.update_int32_field("test_int", 255, ncurses_cpp::NCURSES_CPP_TXT_COLOR_RED);
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-
-    my_window.update_uint32_field("test_uint", 0xBEEFBEEF, ncurses_cpp::NCURSES_CPP_TXT_COLOR_YELLOW);
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-
-    int ch;
-    while ((ch = getch()) != KEY_F(1))
-    { }
-
-    endwin();            /* End curses mode          */
-    return 0;
-}
+#endif // __NCURSES_COLORS_H__

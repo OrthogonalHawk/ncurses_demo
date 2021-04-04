@@ -168,16 +168,32 @@ bool ncurses_window::add_uint32_field(uint32_t x, uint32_t y, std::string field_
 
 bool ncurses_window::update_str_field(std::string field_name, std::string field_val)
 {
+    return update_str_field(field_name, field_val, NCURSES_CPP_TXT_COLOR_DEFAULT);
+}
+
+bool ncurses_window::update_str_field(std::string field_name, std::string field_val, ncurses_cpp_text_colors_e field_color)
+{
     bool ret = false;
 
     if (nullptr != m_window &&
         m_str_fields.count(field_name) > 0)
     {
         auto field_info = m_str_fields[field_name];
+
+        if (NCURSES_CPP_TXT_COLOR_DEFAULT != field_color)
+        {
+            wattron(m_window, COLOR_PAIR(field_color));
+        }
+
         if (OK == mvwprintw(m_window, field_info.y, field_info.x, field_info.format_str.c_str(), field_val.c_str()))
         {
             wrefresh(m_window);
             ret = true;
+        }
+
+        if (NCURSES_CPP_TXT_COLOR_DEFAULT != field_color)
+        {
+            wattroff(m_window, COLOR_PAIR(field_color));
         }
     }
 
@@ -186,16 +202,32 @@ bool ncurses_window::update_str_field(std::string field_name, std::string field_
 
 bool ncurses_window::update_int32_field(std::string field_name, int32_t field_val)
 {
+    return update_int32_field(field_name, field_val, NCURSES_CPP_TXT_COLOR_DEFAULT);
+}
+
+bool ncurses_window::update_int32_field(std::string field_name, int32_t field_val, ncurses_cpp_text_colors_e field_color)
+{
     bool ret = false;
 
     if (nullptr != m_window &&
         m_int32_fields.count(field_name) > 0)
     {
         auto field_info = m_int32_fields[field_name];
+
+        if (NCURSES_CPP_TXT_COLOR_DEFAULT != field_color)
+        {
+            wattron(m_window, COLOR_PAIR(field_color));
+        }
+
         if (OK == mvwprintw(m_window, field_info.y, field_info.x, field_info.format_str.c_str(), field_val))
         {
             wrefresh(m_window);
             ret = true;
+        }
+
+        if (NCURSES_CPP_TXT_COLOR_DEFAULT != field_color)
+        {
+            wattroff(m_window, COLOR_PAIR(field_color));
         }
     }
 
@@ -204,16 +236,32 @@ bool ncurses_window::update_int32_field(std::string field_name, int32_t field_va
 
 bool ncurses_window::update_uint32_field(std::string field_name, uint32_t field_val)
 {
+    return update_uint32_field(field_name, field_val, NCURSES_CPP_TXT_COLOR_DEFAULT);
+}
+
+bool ncurses_window::update_uint32_field(std::string field_name, uint32_t field_val, ncurses_cpp_text_colors_e field_color)
+{
     bool ret = false;
 
     if (nullptr != m_window &&
         m_uint32_fields.count(field_name) > 0)
     {
         auto field_info = m_uint32_fields[field_name];
+
+        if (NCURSES_CPP_TXT_COLOR_DEFAULT != field_color)
+        {
+            wattron(m_window, COLOR_PAIR(field_color));
+        }
+
         if (OK == mvwprintw(m_window, field_info.y, field_info.x, field_info.format_str.c_str(), field_val))
         {
             wrefresh(m_window);
             ret = true;
+        }
+
+        if (NCURSES_CPP_TXT_COLOR_DEFAULT != field_color)
+        {
+            wattroff(m_window, COLOR_PAIR(field_color));
         }
     }
 

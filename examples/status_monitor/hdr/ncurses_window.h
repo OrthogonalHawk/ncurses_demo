@@ -53,6 +53,7 @@
 
 #include <ncurses.h>
 
+#include "ncurses_colors.h"
 
 namespace ncurses_cpp {
 
@@ -95,8 +96,13 @@ public:
     bool add_uint32_field(uint32_t x, uint32_t y, std::string field_name, std::string format_str, uint32_t default_val);
 
     bool update_str_field(std::string field_name, std::string field_val);
+    bool update_str_field(std::string field_name, std::string field_val, ncurses_cpp_text_colors_e field_color);
+
     bool update_int32_field(std::string field_name, int32_t field_val);
+    bool update_int32_field(std::string field_name, int32_t field_val, ncurses_cpp_text_colors_e field_color);
+
     bool update_uint32_field(std::string field_name, uint32_t field_val);
+    bool update_uint32_field(std::string field_name, uint32_t field_val, ncurses_cpp_text_colors_e field_color);
 
 private:
 

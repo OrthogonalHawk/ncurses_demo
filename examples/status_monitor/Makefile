@@ -49,8 +49,9 @@ EXE = status_monitor
 ###############################################################################
 
 CC_SOURCES = \
-    status_monitor.cc \
+    src/ncurses_colors.cc \
     src/ncurses_window.cc \
+    status_monitor.cc \
 
 ###############################################################################
 # Include ../../falcon_makefiles/Makefile.apps for rules
