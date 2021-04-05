@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 
     auto my_window = ncurses_cpp::ncurses_window(true);
     my_window.create_window(10, 20, 2, 2);
-    my_window.add_field<std::string>(1, 1, "test_str", "%s", "hello");
+    my_window.add_field<std::string>(1, 1, "test_str", "%s", "hello", ncurses_cpp::NCURSES_CPP_TXT_COLOR_CYAN);
     my_window.add_field<int32_t>(2, 4, "test_int", "%d", 100);
     my_window.add_field<uint32_t>(5, 8, "test_uint", "0x%08x", 0xFEEDBEEF);
 

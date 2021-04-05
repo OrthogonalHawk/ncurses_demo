@@ -115,6 +115,9 @@ public:
     bool add_field(uint32_t x, uint32_t y, std::string field_name, std::string format_str, T default_val);
 
     template <typename T>
+    bool add_field(uint32_t x, uint32_t y, std::string field_name, std::string format_str, T default_val, ncurses_cpp_text_colors_e default_color);
+
+    template <typename T>
     bool update_field(std::string field_name, T field_val);
 
     template <typename T>
@@ -123,7 +126,7 @@ public:
 private:
 
     template <typename T>
-    bool _add_field(bool allow_reserved_fields, uint32_t x, uint32_t y, std::string field_name, std::string format_str, T default_val);
+    bool _add_field(bool allow_reserved_fields, uint32_t x, uint32_t y, std::string field_name, std::string format_str, T default_val, ncurses_cpp_text_colors_e default_color);
 
     WINDOW *                                                  m_window;
     uint32_t                                                  m_height;
@@ -147,7 +150,13 @@ private:
 template <typename T>
 bool ncurses_window::add_field(uint32_t x, uint32_t y, std::string field_name, std::string format_str, T default_val)
 {
-    return _add_field<T>(false, x, y, field_name, format_str, default_val);
+    return add_field<T>(x, y, field_name, format_str, default_val, NCURSES_CPP_TXT_COLOR_DEFAULT);
+}
+
+template <typename T>
+bool ncurses_window::add_field(uint32_t x, uint32_t y, std::string field_name, std::string format_str, T default_val, ncurses_cpp_text_colors_e default_color)
+{
+    return _add_field<T>(false, x, y, field_name, format_str, default_val, default_color);
 }
 
 
