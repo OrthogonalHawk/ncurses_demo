@@ -262,7 +262,7 @@ bool ncurses_window::_add_field<std::string>(bool allow_reserved_fields, uint32_
     bool ret = false;
 
     if ( (!is_reserved_field(field_name) || allow_reserved_fields) &&
-         m_str_fields.count(field_name) == 0 )
+         !field_name_in_use(field_name) )
     {
         auto new_field = ncurses_field<std::string>();
         new_field.create_field(m_window, x, y, format_str, default_val, default_color);
@@ -279,7 +279,7 @@ bool ncurses_window::_add_field<int32_t>(bool allow_reserved_fields, uint32_t x,
     bool ret = false;
 
     if ( (!is_reserved_field(field_name) || allow_reserved_fields) &&
-         m_int32_fields.count(field_name) == 0 )
+         !field_name_in_use(field_name) )
     {
         auto new_field = ncurses_field<int32_t>();
         new_field.create_field(m_window, x, y, format_str, default_val, default_color);
@@ -296,7 +296,7 @@ bool ncurses_window::_add_field<uint32_t>(bool allow_reserved_fields, uint32_t x
     bool ret = false;
 
     if ( (!is_reserved_field(field_name) || allow_reserved_fields) &&
-         m_uint32_fields.count(field_name) == 0 )
+         !field_name_in_use(field_name) )
     {
         auto new_field = ncurses_field<uint32_t>();
         new_field.create_field(m_window, x, y, format_str, default_val, default_color);
@@ -313,7 +313,7 @@ bool ncurses_window::_add_field<float>(bool allow_reserved_fields, uint32_t x, u
     bool ret = false;
 
     if ( (!is_reserved_field(field_name) || allow_reserved_fields) &&
-         m_float_fields.count(field_name) == 0 )
+         !field_name_in_use(field_name) )
     {
         auto new_field = ncurses_field<float>();
         new_field.create_field(m_window, x, y, format_str, default_val, default_color);
@@ -330,7 +330,7 @@ bool ncurses_window::_add_field<double>(bool allow_reserved_fields, uint32_t x, 
     bool ret = false;
 
     if ( (!is_reserved_field(field_name) || allow_reserved_fields) &&
-         m_double_fields.count(field_name) == 0 )
+         !field_name_in_use(field_name) )
     {
         auto new_field = ncurses_field<double>();
         new_field.create_field(m_window, x, y, format_str, default_val, default_color);
@@ -404,6 +404,22 @@ bool ncurses_window::add_title(std::string title_str, vertical_alignment_e vert_
 
         ret = _add_field<std::string>(true, title_x, title_y, TITLE_FIELD_NAME, " %s ", title_str, title_color);
         ret &= update_field<std::string>(TITLE_FIELD_NAME, title_str);
+    }
+
+    return ret;
+}
+
+bool ncurses_window::field_name_in_use(std::string field_name)
+{
+    bool ret = false;
+
+    if (m_str_fields.count(field_name) > 0 ||
+        m_int32_fields.count(field_name) > 0 ||
+        m_uint32_fields.count(field_name) > 0 ||
+        m_float_fields.count(field_name) > 0 ||
+        m_double_fields.count(field_name) > 0)
+    {
+        ret = true;
     }
 
     return ret;

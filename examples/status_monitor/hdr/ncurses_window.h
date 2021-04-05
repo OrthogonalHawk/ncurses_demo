@@ -128,6 +128,8 @@ private:
     template <typename T>
     bool _add_field(bool allow_reserved_fields, uint32_t x, uint32_t y, std::string field_name, std::string format_str, T default_val, ncurses_cpp_text_colors_e default_color);
 
+    bool field_name_in_use(std::string field_name);
+
     WINDOW *                                                  m_window;
     uint32_t                                                  m_height;
     uint32_t                                                  m_width;
