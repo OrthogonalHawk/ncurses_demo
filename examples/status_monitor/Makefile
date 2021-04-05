@@ -50,6 +50,7 @@ EXE = status_monitor
 
 CC_SOURCES = \
     src/ncurses_colors.cc \
+    src/ncurses_field.cc \
     src/ncurses_window.cc \
     status_monitor.cc \
 

@@ -50,10 +50,12 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 #include <ncurses.h>
 
 #include "ncurses_colors.h"
+#include "ncurses_field.h"
 
 namespace ncurses_cpp {
 
@@ -81,6 +83,21 @@ class ncurses_window
 {
 public:
 
+    static const std::vector<std::string> RESERVED_FIELD_NAMES;
+    static bool is_reserved_field(std::string field_name);
+
+    typedef enum {
+        LEFT = 0,
+        CENTER,
+        RIGHT
+    } horizontal_alignment_e;
+
+    typedef enum {
+        TOP = 0,
+        MIDDLE,
+        BOTTOM
+    } vertical_alignment_e;
+
     ncurses_window(void);
     ncurses_window(bool outline_window);
     virtual ~ncurses_window(void);
@@ -90,6 +107,9 @@ public:
 
     bool clear_window(void);
     bool clear_window(char clear_char);
+
+    bool add_title(std::string title_str);
+    bool add_title(std::string title_str, vertical_alignment_e vert_alignment, horizontal_alignment_e horiz_alignment, ncurses_cpp_text_colors_e title_color);
 
     bool add_str_field(uint32_t x, uint32_t y, std::string field_name, std::string format_str, std::string default_val);
     bool add_int32_field(uint32_t x, uint32_t y, std::string field_name, std::string format_str, int32_t default_val);
@@ -106,56 +126,19 @@ public:
 
 private:
 
-    struct field_info_t
-    {
-        field_info_t(void) = default;
-        field_info_t(uint32_t _x, uint32_t _y, std::string _format_str)
-          : x(_x), y(_y), format_str(_format_str)
-        { }
+    bool _add_str_field(bool allow_reserved_fields, uint32_t x, uint32_t y, std::string field_name, std::string format_str, std::string default_val);
+    bool _add_int32_field(bool allow_reserved_fields, uint32_t x, uint32_t y, std::string field_name, std::string format_str, int32_t default_val);
+    bool _add_uint32_field(bool allow_reserved_fields, uint32_t x, uint32_t y, std::string field_name, std::string format_str, uint32_t default_val);
 
-        uint32_t            x;
-        uint32_t            y;
-        std::string         format_str;
-    };
-
-    struct str_field_info_t : public field_info_t
-    {
-        str_field_info_t(void) = default;
-        str_field_info_t(uint32_t _x, uint32_t _y, std::string _format_str, std::string _default_val)
-          : field_info_t(_x, _y, _format_str),
-            default_val(_default_val)
-        { }
-
-        std::string         default_val;
-    };
-
-    struct int32_field_info_t : public field_info_t
-    {
-        int32_field_info_t(void) = default;
-        int32_field_info_t(uint32_t _x, uint32_t _y, std::string _format_str, int32_t _default_val)
-          : field_info_t(_x, _y, _format_str),
-            default_val(_default_val)
-        { }
-
-        int32_t             default_val;
-    };
-
-    struct uint32_field_info_t : public field_info_t
-    {
-        uint32_field_info_t(void) = default;
-        uint32_field_info_t(uint32_t _x, uint32_t _y, std::string _format_str, uint32_t _default_val)
-          : field_info_t(_x, _y, _format_str),
-            default_val(_default_val)
-        { }
-
-        uint32_t            default_val;
-    };
-
-    WINDOW *                                        m_window;
-    bool                                            m_outline_window;
-    std::map<std::string, str_field_info_t>         m_str_fields;
-    std::map<std::string, int32_field_info_t>       m_int32_fields;
-    std::map<std::string, uint32_field_info_t>      m_uint32_fields;
+    WINDOW *                                                  m_window;
+    uint32_t                                                  m_height;
+    uint32_t                                                  m_width;
+    bool                                                      m_outline_window;
+    std::map<std::string, ncurses_field<std::string>>         m_str_fields;
+    std::map<std::string, ncurses_field<int32_t>>             m_int32_fields;
+    std::map<std::string, ncurses_field<uint32_t>>            m_uint32_fields;
+    std::map<std::string, ncurses_field<float>>               m_float_fields;
+    std::map<std::string, ncurses_field<double>>              m_double_fields;
 };
 
 }; /* end of the ncurses_cpp namespace */
