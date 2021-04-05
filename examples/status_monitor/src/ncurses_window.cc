@@ -77,34 +77,6 @@ const std::string TITLE_FIELD_NAME = "title";
  *                           CLASS IMPLEMENTATION
  *****************************************************************************/
 
-//template <> bool ncurses_window::update_field<std::string>(std::string field_name, std::string field_val, ncurses_cpp_text_colors_e field_color);
-//template <> bool ncurses_window::_add_field<std::string>(bool allow_reserved_fields, uint32_t x, uint32_t y, std::string field_name, std::string format_str, std::string default_val);
-/*
-template <> bool ncurses_window::add_field<std::string>(uint32_t x, uint32_t y, std::string field_name, std::string format_str, std::string default_val);
-template <> bool ncurses_window::add_field<int32_t>(uint32_t x, uint32_t y, std::string field_name, std::string format_str, int32_t default_val);
-template <> bool ncurses_window::add_field<uint32_t>(uint32_t x, uint32_t y, std::string field_name, std::string format_str, uint32_t default_val);
-template <> bool ncurses_window::add_field<float>(uint32_t x, uint32_t y, std::string field_name, std::string format_str, float default_val);
-template <> bool ncurses_window::add_field<double>(uint32_t x, uint32_t y, std::string field_name, std::string format_str, double default_val);
-
-template <> bool ncurses_window::update_field<std::string>(std::string field_name, std::string field_val);
-template <> bool ncurses_window::update_field<int32_t>(std::string field_name, int32_t field_val);
-template <> bool ncurses_window::update_field<uint32_t>(std::string field_name, uint32_t field_val);
-template <> bool ncurses_window::update_field<float>(std::string field_name, float field_val);
-template <> bool ncurses_window::update_field<double>(std::string field_name, double field_val);
-
-template <> bool ncurses_window::update_field<std::string>(std::string field_name, std::string field_val, ncurses_cpp_text_colors_e field_color);
-template <> bool ncurses_window::update_field<int32_t>(std::string field_name, int32_t field_val, ncurses_cpp_text_colors_e field_color);
-template <> bool ncurses_window::update_field<uint32_t>(std::string field_name, uint32_t field_val, ncurses_cpp_text_colors_e field_color);
-template <> bool ncurses_window::update_field<float>(std::string field_name, float field_val, ncurses_cpp_text_colors_e field_color);
-template <> bool ncurses_window::update_field<double>(std::string field_name, double field_val, ncurses_cpp_text_colors_e field_color);
-
-template <> bool ncurses_window::_add_field<std::string>(bool allow_reserved_fields, uint32_t x, uint32_t y, std::string field_name, std::string format_str, std::string default_val);
-template <> bool ncurses_window::_add_field<int32_t>(bool allow_reserved_fields, uint32_t x, uint32_t y, std::string field_name, std::string format_str, int32_t default_val);
-template <> bool ncurses_window::_add_field<uint32_t>(bool allow_reserved_fields, uint32_t x, uint32_t y, std::string field_name, std::string format_str, uint32_t default_val);
-template <> bool ncurses_window::_add_field<float>(bool allow_reserved_fields, uint32_t x, uint32_t y, std::string field_name, std::string format_str, float default_val);
-template <> bool ncurses_window::_add_field<double>(bool allow_reserved_fields, uint32_t x, uint32_t y, std::string field_name, std::string format_str, double default_val);
-*/
-
 const std::vector<std::string> ncurses_window::RESERVED_FIELD_NAMES = { TITLE_FIELD_NAME };
 
 bool ncurses_window::is_reserved_field(std::string field_name)
@@ -178,10 +150,69 @@ bool ncurses_window::cleanup_window(void)
     return ret;
 }
 
-template <typename T>
-bool ncurses_window::update_field(std::string field_name, T field_val)
+template <>
+bool ncurses_window::add_field_thresholds<std::string>(std::string field_name, std::pair<std::string, std::string> field_threshold_vals, ncurses_cpp_text_colors_e field_color)
 {
-    return update_field<T>(field_name, field_val, NCURSES_CPP_TXT_COLOR_DEFAULT);
+    bool ret = false;
+
+    if (m_str_fields.count(field_name) > 0)
+    {
+        ret = m_str_fields[field_name].add_field_thresholds(field_threshold_vals, field_color);
+    }
+
+    return ret;
+}
+
+template <>
+bool ncurses_window::add_field_thresholds<int32_t>(std::string field_name, std::pair<int32_t, int32_t> field_threshold_vals, ncurses_cpp_text_colors_e field_color)
+{
+    bool ret = false;
+
+    if (m_int32_fields.count(field_name) > 0)
+    {
+        ret = m_int32_fields[field_name].add_field_thresholds(field_threshold_vals, field_color);
+    }
+
+    return ret;
+}
+
+template <>
+bool ncurses_window::add_field_thresholds<uint32_t>(std::string field_name, std::pair<uint32_t, uint32_t> field_threshold_vals, ncurses_cpp_text_colors_e field_color)
+{
+    bool ret = false;
+
+    if (m_uint32_fields.count(field_name) > 0)
+    {
+        ret = m_uint32_fields[field_name].add_field_thresholds(field_threshold_vals, field_color);
+    }
+
+    return ret;
+}
+
+template <>
+bool ncurses_window::add_field_thresholds<float>(std::string field_name, std::pair<float, float> field_threshold_vals, ncurses_cpp_text_colors_e field_color)
+{
+    bool ret = false;
+
+    if (m_float_fields.count(field_name) > 0)
+    {
+        ret = m_float_fields[field_name].add_field_thresholds(field_threshold_vals, field_color);
+    }
+
+    return ret;
+}
+
+template <>
+bool ncurses_window::add_field_thresholds<double>(std::string field_name, std::pair<double, double> field_threshold_vals, ncurses_cpp_text_colors_e field_color)
+{
+    bool ret = false;
+
+    if (m_double_fields.count(field_name) > 0)
+    {
+        ret = m_double_fields[field_name].add_field_thresholds(field_threshold_vals, field_color);
+    }
+
+    return ret;
 }
 
 template <>

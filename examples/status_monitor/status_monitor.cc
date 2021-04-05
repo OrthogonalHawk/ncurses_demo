@@ -98,7 +98,10 @@ int main(int argc, char *argv[])
     my_window.add_field<std::string>(1, 1, "test_str", "%s", "hello", ncurses_cpp::NCURSES_CPP_TXT_COLOR_CYAN);
     my_window.add_field<int32_t>(2, 4, "test_int", "%d", 100);
     my_window.add_field<uint32_t>(5, 8, "test_uint", "0x%08x", 0xFEEDBEEF);
-    my_window.add_field<float>(1, 1, "test_str1", "%.1f", 0.0);
+    my_window.add_field<float>(1, 7, "test_float", "%.1f", 0.0);
+    my_window.add_field_thresholds<float>("test_float", std::make_pair<float, float>(0.0, 75.0), ncurses_cpp::NCURSES_CPP_TXT_COLOR_GREEN);
+    my_window.add_field_thresholds<float>("test_float", std::make_pair<float, float>(75.0, 90.0), ncurses_cpp::NCURSES_CPP_TXT_COLOR_YELLOW);
+    my_window.add_field_thresholds<float>("test_float", std::make_pair<float, float>(90.0, 100.0), ncurses_cpp::NCURSES_CPP_TXT_COLOR_RED);
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
     my_window.update_field<std::string>("test_str", "world", ncurses_cpp::NCURSES_CPP_TXT_COLOR_GREEN);
@@ -108,6 +111,19 @@ int main(int argc, char *argv[])
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
     my_window.update_field<uint32_t>("test_uint", 0xBEEFBEEF, ncurses_cpp::NCURSES_CPP_TXT_COLOR_YELLOW);
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+
+    my_window.update_field<float>("test_float", 50.0);
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    my_window.update_field<float>("test_float", 60.0);
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    my_window.update_field<float>("test_float", 76.0);
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    my_window.update_field<float>("test_float", 91.0);
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    my_window.update_field<float>("test_float", 100.0);
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    my_window.update_field<float>("test_float", 101.0);
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
     int ch;

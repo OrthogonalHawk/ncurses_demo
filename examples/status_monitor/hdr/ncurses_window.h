@@ -118,6 +118,9 @@ public:
     bool add_field(uint32_t x, uint32_t y, std::string field_name, std::string format_str, T default_val, ncurses_cpp_text_colors_e default_color);
 
     template <typename T>
+    bool add_field_thresholds(std::string field_name, std::pair<T, T> field_threshold_vals, ncurses_cpp_text_colors_e field_color);
+
+    template <typename T>
     bool update_field(std::string field_name, T field_val);
 
     template <typename T>
@@ -161,6 +164,11 @@ bool ncurses_window::add_field(uint32_t x, uint32_t y, std::string field_name, s
     return _add_field<T>(false, x, y, field_name, format_str, default_val, default_color);
 }
 
+template <typename T>
+bool ncurses_window::update_field(std::string field_name, T field_val)
+{
+    return update_field<T>(field_name, field_val, NCURSES_CPP_TXT_COLOR_DEFAULT);
+}
 
 }; /* end of the ncurses_cpp namespace */
 
