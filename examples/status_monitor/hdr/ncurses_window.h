@@ -111,24 +111,19 @@ public:
     bool add_title(std::string title_str);
     bool add_title(std::string title_str, vertical_alignment_e vert_alignment, horizontal_alignment_e horiz_alignment, ncurses_cpp_text_colors_e title_color);
 
-    bool add_str_field(uint32_t x, uint32_t y, std::string field_name, std::string format_str, std::string default_val);
-    bool add_int32_field(uint32_t x, uint32_t y, std::string field_name, std::string format_str, int32_t default_val);
-    bool add_uint32_field(uint32_t x, uint32_t y, std::string field_name, std::string format_str, uint32_t default_val);
+    template <typename T>
+    bool add_field(uint32_t x, uint32_t y, std::string field_name, std::string format_str, T default_val);
 
-    bool update_str_field(std::string field_name, std::string field_val);
-    bool update_str_field(std::string field_name, std::string field_val, ncurses_cpp_text_colors_e field_color);
+    template <typename T>
+    bool update_field(std::string field_name, T field_val);
 
-    bool update_int32_field(std::string field_name, int32_t field_val);
-    bool update_int32_field(std::string field_name, int32_t field_val, ncurses_cpp_text_colors_e field_color);
-
-    bool update_uint32_field(std::string field_name, uint32_t field_val);
-    bool update_uint32_field(std::string field_name, uint32_t field_val, ncurses_cpp_text_colors_e field_color);
+    template <typename T>
+    bool update_field(std::string field_name, T field_val, ncurses_cpp_text_colors_e field_color);
 
 private:
 
-    bool _add_str_field(bool allow_reserved_fields, uint32_t x, uint32_t y, std::string field_name, std::string format_str, std::string default_val);
-    bool _add_int32_field(bool allow_reserved_fields, uint32_t x, uint32_t y, std::string field_name, std::string format_str, int32_t default_val);
-    bool _add_uint32_field(bool allow_reserved_fields, uint32_t x, uint32_t y, std::string field_name, std::string format_str, uint32_t default_val);
+    template <typename T>
+    bool _add_field(bool allow_reserved_fields, uint32_t x, uint32_t y, std::string field_name, std::string format_str, T default_val);
 
     WINDOW *                                                  m_window;
     uint32_t                                                  m_height;
@@ -140,6 +135,21 @@ private:
     std::map<std::string, ncurses_field<float>>               m_float_fields;
     std::map<std::string, ncurses_field<double>>              m_double_fields;
 };
+
+
+/******************************************************************************
+ *                            TEMPLATE FUNCTIONS
+ *****************************************************************************/
+
+/* these functions do not have specializations for the class; putting them here
+ *  helps the linker resolve the template versions */
+
+template <typename T>
+bool ncurses_window::add_field(uint32_t x, uint32_t y, std::string field_name, std::string format_str, T default_val)
+{
+    return _add_field<T>(false, x, y, field_name, format_str, default_val);
+}
+
 
 }; /* end of the ncurses_cpp namespace */
 

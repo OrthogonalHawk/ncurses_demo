@@ -95,19 +95,19 @@ int main(int argc, char *argv[])
 
     auto my_window = ncurses_cpp::ncurses_window(true);
     my_window.create_window(10, 20, 2, 2);
-    my_window.add_str_field(1, 1, "test_str", "%s", "hello");
-    my_window.add_int32_field(2, 4, "test_int", "%d", 100);
-    my_window.add_uint32_field(5, 8, "test_uint", "0x%08x", 0xFEEDBEEF);
+    my_window.add_field<std::string>(1, 1, "test_str", "%s", "hello");
+    my_window.add_field<int32_t>(2, 4, "test_int", "%d", 100);
+    my_window.add_field<uint32_t>(5, 8, "test_uint", "0x%08x", 0xFEEDBEEF);
 
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
-    my_window.update_str_field("test_str", "world", ncurses_cpp::NCURSES_CPP_TXT_COLOR_GREEN);
+    my_window.update_field<std::string>("test_str", "world", ncurses_cpp::NCURSES_CPP_TXT_COLOR_GREEN);
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
-    my_window.update_int32_field("test_int", 255, ncurses_cpp::NCURSES_CPP_TXT_COLOR_RED);
+    my_window.update_field<int32_t>("test_int", 255, ncurses_cpp::NCURSES_CPP_TXT_COLOR_RED);
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
-    my_window.update_uint32_field("test_uint", 0xBEEFBEEF, ncurses_cpp::NCURSES_CPP_TXT_COLOR_YELLOW);
+    my_window.update_field<uint32_t>("test_uint", 0xBEEFBEEF, ncurses_cpp::NCURSES_CPP_TXT_COLOR_YELLOW);
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
     int ch;

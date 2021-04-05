@@ -93,9 +93,20 @@ public:
     bool update_field(T field_val);
     bool update_field(T field_val, ncurses_cpp_text_colors_e field_color);
 
+    bool add_field_thresholds(std::pair<T, T> field_threshold_vals, ncurses_cpp_text_colors_e field_color);
+
 private:
 
-    bool compare_threshold_vals(const std::pair<T, ncurses_cpp_text_colors_e>& a, const std::pair<T, ncurses_cpp_text_colors_e>& b);
+    struct field_thresholds_t
+    {
+        bool operator==(const field_thresholds_t& other) { return threshold == other.threshold && color == other.color; }
+
+        std::pair<T, T>             threshold;
+        ncurses_cpp_text_colors_e   color;
+    };
+
+    static bool compare_threshold_vals(const field_thresholds_t& a, const field_thresholds_t& b);
+    ncurses_cpp_text_colors_e get_color_based_on_thresholds(T field_val);
 
     WINDOW *                                                  m_window;
     uint32_t                                                  m_x;
@@ -103,7 +114,7 @@ private:
     std::string                                               m_format_str;
     T                                                         m_current_value;
     ncurses_cpp_text_colors_e                                 m_default_color;
-    std::vector<std::pair<T, ncurses_cpp_text_colors_e>>      m_threshold_vals;
+    std::vector<field_thresholds_t>                           m_threshold_vals;
 };
 
 }; /* end of the ncurses_cpp namespace */

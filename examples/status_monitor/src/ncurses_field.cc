@@ -129,6 +129,12 @@ template <>
 bool ncurses_field<std::string>::update_field(std::string field_val, ncurses_cpp_text_colors_e field_color)
 {
     bool ret = false;
+    ncurses_cpp_text_colors_e threshold_color = get_color_based_on_thresholds(field_val);
+    if (NCURSES_CPP_TXT_COLOR_DEFAULT == field_color &&
+        NCURSES_CPP_TXT_COLOR_DEFAULT != threshold_color)
+    {
+        field_color = threshold_color;
+    }
 
     if (nullptr != m_window)
     {
@@ -156,6 +162,12 @@ template <typename T>
 bool ncurses_field<T>::update_field(T field_val, ncurses_cpp_text_colors_e field_color)
 {
     bool ret = false;
+    ncurses_cpp_text_colors_e threshold_color = get_color_based_on_thresholds(field_val);
+    if (NCURSES_CPP_TXT_COLOR_DEFAULT == field_color &&
+        NCURSES_CPP_TXT_COLOR_DEFAULT != threshold_color)
+    {
+        field_color = threshold_color;
+    }
 
     if (nullptr != m_window)
     {
@@ -173,6 +185,61 @@ bool ncurses_field<T>::update_field(T field_val, ncurses_cpp_text_colors_e field
         if (NCURSES_CPP_TXT_COLOR_DEFAULT != field_color)
         {
             wattroff(m_window, COLOR_PAIR(field_color));
+        }
+    }
+
+    return ret;
+}
+
+template <typename T>
+bool ncurses_field<T>::add_field_thresholds(std::pair<T, T> field_threshold_vals, ncurses_cpp_text_colors_e field_color)
+{
+    bool ret = false;
+
+    if (field_threshold_vals.first < field_threshold_vals.second)
+    {
+        field_thresholds_t new_threshold;
+        new_threshold.threshold = field_threshold_vals;
+        new_threshold.color = field_color;
+
+        auto found_match = std::find(m_threshold_vals.begin(), m_threshold_vals.end(), new_threshold);
+        if (found_match == m_threshold_vals.end())
+        {
+            m_threshold_vals.push_back(new_threshold);
+            std::sort(m_threshold_vals.begin(), m_threshold_vals.end(), ncurses_field<T>::compare_threshold_vals);
+
+            ret = true;
+        }
+    }
+
+    return ret;
+}
+
+template <typename T>
+bool ncurses_field<T>::compare_threshold_vals(const field_thresholds_t& a, const field_thresholds_t& b)
+{
+    if (a.threshold.first == b.threshold.first)
+    {
+        return a.threshold.second < b.threshold.second;
+    }
+    else
+    {
+        return a.threshold.first < b.threshold.first;
+    }
+}
+
+template <typename T>
+ncurses_cpp_text_colors_e ncurses_field<T>::get_color_based_on_thresholds(T field_val)
+{
+    ncurses_cpp_text_colors_e ret = NCURSES_CPP_TXT_COLOR_DEFAULT;
+
+    for (auto iter = m_threshold_vals.begin(); iter != m_threshold_vals.end(); ++iter)
+    {
+        if (iter->threshold.first <= field_val &&
+            field_val <= iter->threshold.second)
+        {
+            ret = iter->color;
+            break;
         }
     }
 
