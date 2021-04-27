@@ -98,9 +98,11 @@ public:
         BOTTOM
     } vertical_alignment_e;
 
-    ncurses_window(void);
-    ncurses_window(bool outline_window);
+    ncurses_window(std::string window_name);
+    ncurses_window(std::string window_name, bool outline_window);
     virtual ~ncurses_window(void);
+
+    std::string get_window_name(void) const { return m_window_name; }
 
     bool create_window(uint32_t height, uint32_t width, uint32_t start_x, uint32_t start_y);
     bool cleanup_window(void);
@@ -131,7 +133,10 @@ private:
     template <typename T>
     bool _add_field(bool allow_reserved_fields, uint32_t x, uint32_t y, std::string field_name, std::string format_str, T default_val, ncurses_cpp_text_colors_e default_color);
 
+    bool valid_field_coords(uint32_t x, uint32_t y);
     bool field_name_in_use(std::string field_name);
+
+    std::string                                               m_window_name;
 
     WINDOW *                                                  m_window;
     uint32_t                                                  m_height;

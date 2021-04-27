@@ -92,12 +92,13 @@ bool ncurses_window::is_reserved_field(std::string field_name)
     }
 }
 
-ncurses_window::ncurses_window(void)
-  : ncurses_window(true)
+ncurses_window::ncurses_window(std::string window_name)
+  : ncurses_window(window_name, true)
 { }
 
-ncurses_window::ncurses_window(bool outline_window)
-  : m_window(nullptr),
+ncurses_window::ncurses_window(std::string window_name, bool outline_window)
+  : m_window_name(window_name),
+    m_window(nullptr),
     m_outline_window(outline_window)
 { }
 
@@ -293,6 +294,7 @@ bool ncurses_window::_add_field<std::string>(bool allow_reserved_fields, uint32_
     bool ret = false;
 
     if ( (!is_reserved_field(field_name) || allow_reserved_fields) &&
+         valid_field_coords(x, y) &&
          !field_name_in_use(field_name) )
     {
         auto new_field = ncurses_field<std::string>();
@@ -310,6 +312,7 @@ bool ncurses_window::_add_field<int32_t>(bool allow_reserved_fields, uint32_t x,
     bool ret = false;
 
     if ( (!is_reserved_field(field_name) || allow_reserved_fields) &&
+         valid_field_coords(x, y) &&
          !field_name_in_use(field_name) )
     {
         auto new_field = ncurses_field<int32_t>();
@@ -327,6 +330,7 @@ bool ncurses_window::_add_field<uint32_t>(bool allow_reserved_fields, uint32_t x
     bool ret = false;
 
     if ( (!is_reserved_field(field_name) || allow_reserved_fields) &&
+         valid_field_coords(x, y) &&
          !field_name_in_use(field_name) )
     {
         auto new_field = ncurses_field<uint32_t>();
@@ -344,6 +348,7 @@ bool ncurses_window::_add_field<float>(bool allow_reserved_fields, uint32_t x, u
     bool ret = false;
 
     if ( (!is_reserved_field(field_name) || allow_reserved_fields) &&
+         valid_field_coords(x, y) &&
          !field_name_in_use(field_name) )
     {
         auto new_field = ncurses_field<float>();
@@ -361,6 +366,7 @@ bool ncurses_window::_add_field<double>(bool allow_reserved_fields, uint32_t x, 
     bool ret = false;
 
     if ( (!is_reserved_field(field_name) || allow_reserved_fields) &&
+         valid_field_coords(x, y) &&
          !field_name_in_use(field_name) )
     {
         auto new_field = ncurses_field<double>();
@@ -435,6 +441,19 @@ bool ncurses_window::add_title(std::string title_str, vertical_alignment_e vert_
 
         ret = _add_field<std::string>(true, title_x, title_y, TITLE_FIELD_NAME, " %s ", title_str, title_color);
         ret &= update_field<std::string>(TITLE_FIELD_NAME, title_str);
+    }
+
+    return ret;
+}
+
+bool ncurses_window::valid_field_coords(uint32_t x, uint32_t y)
+{
+    bool ret = false;
+
+    if (x < m_width &&
+        y < m_height)
+    {
+        ret = true;
     }
 
     return ret;
