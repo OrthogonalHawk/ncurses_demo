@@ -224,7 +224,7 @@ bool ncurses_window::update_field<std::string>(std::string field_name, std::stri
     if (nullptr != m_window &&
         m_str_fields.count(field_name) > 0)
     {
-        m_str_fields[field_name].update_field(field_val, field_color);
+        ret = m_str_fields[field_name].update_field(field_val, field_color);
     }
 
     return ret;
@@ -254,7 +254,7 @@ bool ncurses_window::update_field<uint32_t>(std::string field_name, uint32_t fie
     if (nullptr != m_window &&
         m_uint32_fields.count(field_name) > 0)
     {
-        m_uint32_fields[field_name].update_field(field_val, field_color);
+        ret = m_uint32_fields[field_name].update_field(field_val, field_color);
     }
 
     return ret;
@@ -268,7 +268,7 @@ bool ncurses_window::update_field<float>(std::string field_name, float field_val
     if (nullptr != m_window &&
         m_float_fields.count(field_name) > 0)
     {
-        m_float_fields[field_name].update_field(field_val, field_color);
+        ret = m_float_fields[field_name].update_field(field_val, field_color);
     }
 
     return ret;
@@ -282,7 +282,7 @@ bool ncurses_window::update_field<double>(std::string field_name, double field_v
     if (nullptr != m_window &&
         m_double_fields.count(field_name) > 0)
     {
-        m_double_fields[field_name].update_field(field_val, field_color);
+        ret = m_double_fields[field_name].update_field(field_val, field_color);
     }
 
     return ret;

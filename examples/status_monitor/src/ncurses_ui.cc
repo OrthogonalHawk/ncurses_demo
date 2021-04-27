@@ -93,6 +93,20 @@ ncurses_ui::~ncurses_ui(void)
     cleanup_ncurses();
 }
 
+bool ncurses_ui::add_window(std::shared_ptr<ncurses_window> window)
+{
+    if (nullptr != window &&
+        m_windows_by_name.count(window->get_window_name()) == 0)
+    {
+        m_windows_by_name[window->get_window_name()] = window;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 bool ncurses_ui::run(void)
 {
     m_last_periodic_task_invocation = std::chrono::steady_clock::now();

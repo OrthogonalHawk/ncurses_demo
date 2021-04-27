@@ -137,6 +137,19 @@ bool ncurses_ui::update_field(std::string window_name, std::string field_name, T
     }
 }
 
+template <typename T>
+bool ncurses_ui::update_field(std::string window_name, std::string field_name, T field_val, ncurses_cpp_text_colors_e field_color)
+{
+    if (m_windows_by_name.count(window_name) > 0)
+    {
+        return m_windows_by_name[window_name]->update_field<T>(field_name, field_val, field_color);
+    }
+    else
+    {
+        return false;
+    }
+}
+
 }; /* end of the ncurses_cpp namespace */
 
 #endif // __NCURSES_USER_INTERFACE_H__
